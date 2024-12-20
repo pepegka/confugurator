@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Калькулятор стоимости экранов</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  input, select {
+    margin-bottom: 20px;
+    width: 200px;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <h1>Калькулятор стоимости экранов</h1>
+  
+  <label for="typeSelect">Тип экрана:</label>
+  <select id="typeSelect">
+    <option value="simple">Простой экран</option>
+    <option value="complex">Сложный экран</option>
+    <option value="cabinet">Экран на кабинетах</option>
+  </select>
+  
+  <label for="moduleCost">Стоимость одного модуля:</label>
+  <input type="number" id="moduleCost" placeholder="Введите стоимость" />
+  
+  <div id="moduleCountContainer">
+    <label for="moduleCount">Количество модулей:</label>
+    <input type="number" id="moduleCount" placeholder="Введите количество модулей" />
+  </div>
+  
+  <div id="compositeContainer" class="hidden">
+    <label for="compositeCount">Количество композита:</label>
+    <input type="number" id="compositeCount" placeholder="Введите количество композита" />
+  </div>
+  
+  <div id="cabinetContainer" class="hidden">
+    <label for="cabinetCount">Количество кабинетов:</label>
+    <input type="number" id="cabinetCount" placeholder="Введите количество кабинетов" />
+  </div>
+  
+  <button id="calculateBtn">Рассчитать</button>
+  
+  <h2>Итоговая стоимость: <span id="result">0</span></h2>
+  
+  <script>
+    const typeSelect = document.getElementById('typeSelect');
+    const moduleCostInput = document.getElementById('moduleCost');
+    const moduleCountInput = document.getElementById('moduleCount');
+    const compositeContainer = document.getElementById('compositeContainer');
+    const cabinetContainer = document.getElementById('cabinetContainer');
+    const compositeCountInput = document.getElementById('compositeCount');
+    const cabinetCountInput = document.getElementById('cabinetCount');
+    const resultSpan = document.getElementById('result');
+    const calculateBtn = document.getElementById('calculateBtn');
+    
+    // Функция для переключения видимости полей
+    function updateFields() {
+      const type = typeSelect.value;
+      
+      if (type === 'simple') {
+        // Простой экран
+        compositeContainer.classList.add('hidden');
+        cabinetContainer.classList.add('hidden');
+      } else if (type === 'complex') {
+        // Сложный экран
+        compositeContainer.classList.remove('hidden');
+        cabinetContainer.classList.add('hidden');
+      } else if (type === 'cabinet') {
+        // Экран на кабинетах
+        compositeContainer.classList.add('hidden');
+        cabinetContainer.classList.remove('hidden');
+      }
+    }
+    
+    typeSelect.addEventListener('change', updateFields);
+    
+    calculateBtn.addEventListener('click', function() {
+      const type = typeSelect.value;
+      const moduleCost = parseFloat(moduleCostInput.value) || 0;
+      const moduleCount = parseFloat(moduleCountInput.value) || 0;
+      const compositeCount = parseFloat(compositeCountInput.value) || 0;
+      const cabinetCount = parseFloat(cabinetCountInput.value) || 0;
+      
+      let cost = 0;
+      
+      if (type === 'simple') {
+        cost = moduleCost * moduleCount;
+      } else if (type === 'complex') {
+        cost = moduleCost * moduleCount + compositeCount * 7000;
+      } else if (type === 'cabinet') {
+        cost = cabinetCount * (18 * moduleCost + 10000);
+      }
+      
+      resultSpan.textContent = cost;
+    });
+    
+    // Изначально скрываем ненужные поля
+    updateFields();
+  </script>
+</body>
+</html>
